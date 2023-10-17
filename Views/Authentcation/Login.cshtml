@@ -1,0 +1,128 @@
+﻿@model TrustCare.Models.User
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+
+
+
+
+<!-- Section: Design Block -->
+<section class="mb-0">
+    <!-- Jumbotron -->
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color:hsl(243.67deg 100% 98.46%);">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-lg-0">
+                    <h3 class="my-5 display-5 fw-bold ls-tight">
+                        Welcome to TrustCare <br />
+                        <span style=" font-size: 40px;color: hsl(218deg 75.42% 41%)">Sign in to your account</span>
+                    </h3> 
+                    <p class="mb-4 opacity-70" style="color: hsl(218deg 58.2% 65.78%)">
+                        Please enter your username and password to access your health insurance account.
+                    </p>
+                </div>
+
+                <div class="col-lg-6  mb-lg-0">
+                    <div class="card">
+                        <div class="card-body py-5 px-md-5">
+                            <h3 class="card-title text-center">Sign In</h3>
+
+                            <form method="post" asp-action="Login">
+                                <!-- 2 column grid layout with text inputs for the first and last names -->
+            
+                                <div class="mb-3">
+                                    <label asp-for="UserName" class="form-label">Username</label>
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Password" class="form-label">Password</label>
+                                    <input asp-for="Password" type="password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-check d-flex justify-content-start mb-4">
+                                    <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
+                                    <label class="form-check-label" for="form1Example3"> Remember Me </label>
+                                </div>
+                                <p style="color:red">@ViewBag.Wrong</p>
+
+                                <!-- Submit button -->
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                </div>
+                                <!-- Register buttons -->
+                                <div class="text-center">
+                                    <p>or sign up with:</p>
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fab fa-google"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fab fa-twitter"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fab fa-github"></i>
+                                    </button>
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-0">
+                                        Don't have an account? <a href="/Authentcation/Register" class="text-black-50 fw-bold">Sign Up</a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<!-- Section: Design Block --><!-- Section: Design Block -->
+
+@*
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Login</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="Login">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Username</label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <p style="color:red">@ViewBag.Wrong</p>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+

@@ -1,0 +1,139 @@
+﻿@model TrustCare.Models.User
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+
+<section class="mb-0">
+    <!-- Jumbotron -->
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color:hsl(243.67deg 100% 98.46%);">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-lg-0">
+                    <h3 class="my-5 display-5 fw-bold ls-tight">
+                        Welcome to TrustCare <br />
+             
+                    </h3>
+
+                </div>
+
+                <div class="col-lg-6  mb-lg-0">
+                    <div class="card">
+                        <div class="card-body py-5 px-md-5">
+                            <form method="post" asp-action="Register" enctype="multipart/form-data">
+                                <div class="row g-3">
+                                    <h3 class="text-center">Sign Up</h3>
+                                    <!-- 1. Profile Image -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="file"
+                                                   class="form-control"
+                                                   id="ImageFile"
+                                                   name="ImageFile"
+                                                   accept="image/*"
+                                                   asp-for="ImageFile" />
+                                            <label for="ImageFile">Profile Image</label>
+                                        </div>
+                                    </div>
+                                    <!-- 2. User Name -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="UserName"
+                                                   name="UserName"
+                                                   placeholder="User Name"
+                                                   asp-for="UserName" />
+                                            <label for="UserName">User Name</label>
+                                        </div>
+                                    </div>
+                                    <!-- 3. Password -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="Password"
+                                                   name="Password"
+                                                   placeholder="Password"
+                                                   asp-for="Password" />
+                                            <label for="Password">Password</label>
+                                        </div>
+                                    </div>
+                                    <!-- 4. Email -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="email"
+                                                   class="form-control"
+                                                   id="Email"
+                                                   name="Email"
+                                                   placeholder="Email"
+                                                   asp-for="Email" />
+                                            <label for="Email">Email</label>
+                                        </div>
+                                    </div>
+                                    <!-- 5. First Name -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="FirstName"
+                                                   name="FirstName"
+                                                   placeholder="First Name"
+                                                   asp-for="FirstName" />
+                                            <label for="FirstName">First Name</label>
+                                        </div>
+                                    </div>
+                                    <!-- 6. Last Name -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="LastName"
+                                                   name="LastName"
+                                                   placeholder="Last Name"
+                                                   asp-for="LastName" />
+                                            <label for="LastName">Last Name</label>
+                                        </div>
+                                    </div>
+                                    <!-- 7. Phone -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="tel"
+                                                   class="form-control"
+                                                   id="Phone"
+                                                   name="Phone"
+                                                   placeholder="Phone"
+                                                   asp-for="Phone" />
+                                            <label for="Phone">Phone</label>
+                                        </div>
+                                    </div>
+                                    <!-- 8. Date of Birth -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="date"
+                                                   class="form-control"
+                                                   id="DateOfBirth"
+                                                   name="DateOfBirth"
+                                                   placeholder="Date of Birth"
+                                                   asp-for="Dateofbirth" />
+                                            <label for="DateOfBirth">Date of Birth</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">                                     
+                                        <p style="color:red">@ViewBag.Error</p>
+                                        <button class="btn btn-primary py-3 px-5" type="submit">
+                                            Register
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
