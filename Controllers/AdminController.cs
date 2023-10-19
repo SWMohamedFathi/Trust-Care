@@ -33,7 +33,56 @@ namespace TrustCare.Controllers
 
             return View();
         }
+        //Get
+        public IActionResult Search()
+        {
+            var model = _context.Subscriptions.ToList();
+            return View(model);
 
+        }
+
+        //post
+        [HttpPost]
+        public IActionResult Search(DateTime? StartDate, DateTime? EndDate)
+        {
+
+             var model = _context.Subscriptions.ToList();
+
+
+            if (StartDate == null && EndDate == null)
+            {
+                return View(model);
+
+            }
+            else if (StartDate != null && EndDate == null)
+            {
+
+                var result = model.Where(x => x.SubscriptionDate.Value.Date >= StartDate);
+                return View(result);
+
+
+            }
+
+            else if (StartDate == null && EndDate != null)
+            {
+                var result = model.Where(x => x.SubscriptionDate.Value.Date <= EndDate);
+                return View(result);
+
+
+            }
+
+            else
+            {
+
+                var result = model.Where(x => x.SubscriptionDate.Value.Date >= StartDate && x.SubscriptionDate.Value.Date <= EndDate);
+            }
+
+
+
+
+            return View();
+
+        }
 
 
 

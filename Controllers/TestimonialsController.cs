@@ -18,12 +18,50 @@ namespace TrustCare.Controllers
             _context = context;
         }
 
+
+
+
+
         // GET: Testimonials
         public async Task<IActionResult> Index()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
+
             var modelContext = _context.Testimonials.Include(t => t.User);
             return View(await modelContext.ToListAsync());
         }
+
+        public async Task<IActionResult> AcceptTestimonial(decimal testimonialId)
+        {
+            var testimonial = await _context.Testimonials.FindAsync(testimonialId);
+
+            if (testimonial != null)
+            {
+                testimonial.ApprovalStatus = "Accepted";
+                await _context.SaveChangesAsync();
+            }
+
+            
+            return RedirectToAction("Index");
+        }
+
+
+    
+        public async Task<IActionResult> RejectTestimonial(decimal testimonialId)
+        {
+            var testimonial = await _context.Testimonials.FindAsync(testimonialId);
+
+            if (testimonial != null)
+            {
+                testimonial.ApprovalStatus = "Rejected";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
 
         // GET: Testimonials/Details/5
         public async Task<IActionResult> Details(decimal? id)
@@ -163,5 +201,8 @@ namespace TrustCare.Controllers
         {
           return (_context.Testimonials?.Any(e => e.TestimonialId == id)).GetValueOrDefault();
         }
+
+
+
     }
 }

@@ -25,6 +25,8 @@ namespace TrustCare.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             var modelContext = _context.Users.Include(u => u.Role);
             return View(await modelContext.ToListAsync());
         }
@@ -124,7 +126,7 @@ namespace TrustCare.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("UserId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth")] User user)
+        public async Task<IActionResult> Edit(decimal id, [Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
         {
             if (id != user.UserId)
             {
@@ -153,6 +155,10 @@ namespace TrustCare.Controllers
 
                     _context.Update(user);
                     await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("FirstName", user.FirstName);
+
+                    HttpContext.Session.SetString("ProfileImage", user.ProfileImage);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -207,6 +213,7 @@ namespace TrustCare.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool UserExists(decimal id)

@@ -27,6 +27,45 @@ namespace TrustCare.Controllers
             return View(await modelContext.ToListAsync());
         }
 
+
+
+
+        public async Task<IActionResult> AcceptBeneficiary(decimal BeneficiaryId)
+        {
+            var Beneficiary = await _context.Beneficiaries.FindAsync(BeneficiaryId);
+
+            if (Beneficiary != null)
+            {
+                Beneficiary.ApprovalStatus = "Accepted";
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+
+                return RedirectToAction("Make sure you have a Request");
+            }
+        }
+
+        public async Task<IActionResult> RejectBeneficiary(decimal BeneficiaryId)
+        {
+            var Beneficiary = await _context.Beneficiaries.FindAsync(BeneficiaryId);
+
+            if (Beneficiary != null)
+            {
+                Beneficiary.ApprovalStatus = "Rejected";
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+
+                return RedirectToAction("Make sure you have a Request");
+            }
+        }
+
         // GET: Beneficiaries/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {

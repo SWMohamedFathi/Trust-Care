@@ -21,6 +21,8 @@ namespace TrustCare.Controllers
         // GET: Subscriptions
         public async Task<IActionResult> Index()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             var modelContext = _context.Subscriptions.Include(s => s.User);
             return View(await modelContext.ToListAsync());
         }

@@ -3,6 +3,77 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "_AdminLayout";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Testimonials</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().TestimonialText)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().ApprovalStatus)
+                        </th>
+                        <th>
+                            User
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TestimonialText)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApprovalStatus)
+                            </td>
+                            <td>
+                                 @item.User.@ViewBag.FirstName
+                            </td>
+                            <td>
+                                @if (item.ApprovalStatus != null)
+                                {
+
+                                    <div style="text-align: center;">
+                                        <form asp-action="AcceptTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
+                                            <button type="submit" class="btn btn-success">Accept</button>
+                                        </form>
+                                        <form asp-action="RejectTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@* @model IEnumerable<TrustCare.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
 
 }
 
@@ -44,6 +115,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.User.UserId)
             </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.TestimonialId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.TestimonialId">Details</a> |
@@ -56,4 +128,4 @@
 </div>
     </div>
 
-</div>
+</div> *@

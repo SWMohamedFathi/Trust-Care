@@ -101,6 +101,7 @@ namespace TrustCare.Controllers
                         HttpContext.Session.SetString("FirstName", auth.FirstName);
                         HttpContext.Session.SetString("LastName", auth.LastName);
                         HttpContext.Session.SetString("UserName", auth.UserName);
+
                         HttpContext.Session.SetString("ProfileImage", auth.ProfileImage);
                         HttpContext.Session.SetString("Email", auth.Email);               
                         HttpContext.Session.SetInt32("Phone", (int)auth.Phone);
@@ -134,92 +135,7 @@ namespace TrustCare.Controllers
             return View();
         }
 
-        //public IActionResult Profile()
-        //{
-
-
-
-
-        //   var userId = HttpContext.Session.GetInt32("UserId");
-
-        //    if (userId.HasValue)
-        //    {
-        //        var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-
-        //        if (user != null)
-        //        {
-        //            return View(user);
-        //        }
-        //    }
-
-        //    return View("UserNotFound");
-        //}
-
-
-
-
-
-
-
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Profile([Bind("UserId,UserName,FirstName,LastName,Password,ImageFile")] User user)
-        //{
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var existingUser = _context.Users.FirstOrDefault(u => u.UserId == user.UserId);
-
-        //        if (existingUser != null)
-        //        {
-
-        //            existingUser.UserName = user.UserName;
-        //            existingUser.FirstName = user.FirstName;
-        //            existingUser.LastName = user.LastName;
-        //            existingUser.Password = user.Password;
-             
-
-
-
-
-        //            if (user.ImageFile != null)
-        //            {
-        //                string wwwRootPath = webHostEnvironment.WebRootPath;
-        //                string fileName = Guid.NewGuid().ToString() + user.ImageFile.FileName;
-        //                string path = Path.Combine(wwwRootPath, "Images", fileName);
-
-        //                using (var fileStream = new FileStream(path, FileMode.Create))
-        //                {
-        //                    await user.ImageFile.CopyToAsync(fileStream);
-        //                }
-
-        //                existingUser.ProfileImage = fileName;
-        //            }
-
-        //            // Update the user's data
-        //            _context.Users.Update(existingUser);
-        //            await _context.SaveChangesAsync();
-
-        //            return RedirectToAction("Profile");
-        //        }
-        //    }
-
-        //    return View("Profile", user);
-
-        //    //if (ModelState.IsValid)
-        //    //{
-        //    //    // Update the user's profile data in your database
-        //    //    _context.Users.Update(user);
-
-        //    //    await _context.SaveChangesAsync();
-
-        //    //    return RedirectToAction("Profile");
-        //    //}
-
-        //    //return View("Profile", user);
-        //}
+      
 
     }
     }
