@@ -116,7 +116,11 @@ namespace TrustCare.Controllers
                         HttpContext.Session.SetString("FirstName", auth.FirstName);
                         HttpContext.Session.SetString("LastName", auth.LastName);
                         HttpContext.Session.SetString("UserName", auth.UserName);
-                        HttpContext.Session.SetString("ProfileImage", auth.ProfileImage);
+                        if (!string.IsNullOrEmpty(auth.ProfileImage))
+                        {
+                            HttpContext.Session.SetString("ProfileImage", auth.ProfileImage);
+                        }
+
                         HttpContext.Session.SetString("Email", auth.Email);
                         HttpContext.Session.SetInt32("Phone", (int)auth.Phone);
                         return RedirectToAction("Index", "Home");

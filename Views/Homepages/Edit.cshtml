@@ -9,14 +9,19 @@
 <h4>Homepage</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-4"> 
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="HomeId" />
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="Logo" class="control-label"></label>
                 <input asp-for="Logo" class="form-control" />
                 <span asp-validation-for="Logo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageLogo" class="control-label"></label>
+                <input asp-for="ImageLogo" class="form-control" />
+                <span asp-validation-for="ImageLogo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SectionName" class="control-label"></label>
@@ -28,10 +33,15 @@
                 <input asp-for="ContentText" class="form-control" />
                 <span asp-validation-for="ContentText" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="SlideImageImage" class="control-label"></label>
                 <input asp-for="SlideImageImage" class="form-control" />
                 <span asp-validation-for="SlideImageImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HeadingOne" class="control-label"></label>
@@ -54,6 +64,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

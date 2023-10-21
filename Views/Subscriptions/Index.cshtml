@@ -9,9 +9,19 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<form class="form-inline" asp-action="Search" method="post">
+    <label class="sr-only" for="stratDate">Start date</label>
+    <input type="date" class="form-control mb-2 mr-sm-2" id="startDate" name="startDate" placeholder="Start date">
+
+    <label class="sr-only" for="endDate">End date</label>
+    <input type="date" class="form-control mb-2 mr-sm-2" id="endDate" name="endDate" placeholder="End date">
+
+
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Subscriptions</h6>

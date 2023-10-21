@@ -12,16 +12,21 @@ namespace TrustCare.Controllers
     public class HomepagesController : Controller
     {
         private readonly ModelContext _context;
-
-        public HomepagesController(ModelContext context)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public HomepagesController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
+
             _context = context;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Homepages
         public async Task<IActionResult> Index()
         {
-              return _context.Homepages != null ? 
+
+        
+
+            return _context.Homepages != null ? 
                           View(await _context.Homepages.ToListAsync()) :
                           Problem("Entity set 'ModelContext.Homepages'  is null.");
         }
@@ -55,10 +60,41 @@ namespace TrustCare.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HomeId,Logo,SectionName,ContentText,SlideImageImage,HeadingOne,HeadingThree")] Homepage homepage)
+        public async Task<IActionResult> Create([Bind("HomeId,Logo,SectionName,ContentText,SlideImageImage,HeadingOne,HeadingThree,ImageFile ,ImageLogo")] Homepage homepage)
         {
             if (ModelState.IsValid)
             {
+                if (homepage.ImageFile != null)
+                {
+                    string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                    string fileName = Guid.NewGuid().ToString() + homepage.ImageFile.FileName;
+
+                    string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await homepage.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    homepage.SlideImageImage = fileName;
+                }
+
+                if (homepage.ImageLogo != null)
+                {
+                    string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                    string fileName = Guid.NewGuid().ToString() + homepage.ImageLogo.FileName;
+
+                    string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await homepage.ImageLogo.CopyToAsync(fileStream);
+                    }
+
+                    homepage.Logo = fileName;
+                }
                 _context.Add(homepage);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +123,7 @@ namespace TrustCare.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("HomeId,Logo,SectionName,ContentText,SlideImageImage,HeadingOne,HeadingThree")] Homepage homepage)
+        public async Task<IActionResult> Edit(decimal id, [Bind("HomeId,Logo,SectionName,ContentText,SlideImageImage,HeadingOne,HeadingThree,ImageFile,ImageLogo")] Homepage homepage)
         {
             if (id != homepage.HomeId)
             {
@@ -98,6 +134,37 @@ namespace TrustCare.Controllers
             {
                 try
                 {
+
+                    if (homepage.ImageFile != null)
+                    {
+                        string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                        string fileName = Guid.NewGuid().ToString() + homepage.ImageFile.FileName;
+
+                        string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await homepage.ImageFile.CopyToAsync(fileStream);
+                        }
+
+                        homepage.SlideImageImage = fileName;
+                    }
+                    if (homepage.ImageLogo != null)
+                    {
+                        string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                        string fileName = Guid.NewGuid().ToString() + homepage.ImageLogo.FileName;
+
+                        string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await homepage.ImageLogo.CopyToAsync(fileStream);
+                        }
+
+                        homepage.Logo = fileName;
+                    }
                     _context.Update(homepage);
                     await _context.SaveChangesAsync();
                 }

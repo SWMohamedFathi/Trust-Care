@@ -1,0 +1,78 @@
+﻿@model IEnumerable<TrustCare.Models.Subscription>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
+
+
+}
+
+<form class="form-inline" asp-action="Search" method="post">
+    <label class="sr-only" for="stratDate">Start date</label>
+    <input type="date" class="form-control mb-2 mr-sm-2" id="startDate" name="startDate" placeholder="Start date">
+
+    <label class="sr-only" for="endDate">End date</label>
+    <input type="date" class="form-control mb-2 mr-sm-2" id="endDate" name="endDate" placeholder="End date">
+
+
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+
+
+<div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Subscriptions</h6>
+</div>
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubscriptionDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubscriptionAmount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PaymentStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PaymentMethod)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubscriptionDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubscriptionAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentMethod)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.UserId)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.SubscriptionId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.SubscriptionId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.SubscriptionId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+        </div>

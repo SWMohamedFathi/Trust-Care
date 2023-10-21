@@ -9,19 +9,34 @@ namespace TrustCare.Controllers
     public class HomeController : Controller
     {
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
+
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, ModelContext context)
+        public HomeController(ILogger<HomeController> logger, ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
-            _context = context;
+             this._context = context;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
             ViewBag.CurrentTime = DateTime.Now;
 
-            return View();
+            //var page = _context.Homepages.ToList();
+            //return View(page);
+
+            var homepages = _context.Homepages.ToList();
+            var testmonail = _context.Testimonials.ToList();
+
+            var model = Tuple.Create<IEnumerable<Homepage>, IEnumerable<Testimonial>>(homepages, testmonail);
+            return View(model);
+
+
+
+
+
         }
 
         public IActionResult AboutUs()
@@ -30,10 +45,11 @@ namespace TrustCare.Controllers
         }
         
 
-          public IActionResult Testimonial()
-        {
-            return View();
-        }
+        //  public IActionResult Testimonial()
+        //{
+        //    //var testmonial = _context.Testimonials.ToList();
+        //    //return View(testmonial);
+        //}
 
         public IActionResult ContactUs()
         {

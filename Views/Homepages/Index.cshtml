@@ -45,7 +45,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Logo)
+                                <img src="@Url.Content("~/Images/" + item.Logo )" asp-append-version="true" width="100" height="100" />
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SectionName)
@@ -54,7 +55,8 @@
                 @Html.DisplayFor(modelItem => item.ContentText)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SlideImageImage)
+                                <img src="@Url.Content("~/Images/" + item.SlideImageImage )" asp-append-version="true" width="100" height="100" />
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.HeadingOne)

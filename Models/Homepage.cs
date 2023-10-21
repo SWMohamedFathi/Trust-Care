@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-
 namespace TrustCare.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public partial class Homepage
 {
+
+    [NotMapped]
+    public IFormFile? ImageFile { get; set; }
+    [NotMapped]
+    public IFormFile? ImageLogo { get; set; }
     public decimal HomeId { get; set; }
 
     public string? Logo { get; set; }
