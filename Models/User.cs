@@ -8,7 +8,6 @@ public partial class User
 {
     [NotMapped]
     public IFormFile? ImageFile { get; set; }
-
     public decimal UserId { get; set; }
 
     public decimal? RoleId { get; set; }

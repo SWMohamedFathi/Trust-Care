@@ -9,7 +9,7 @@
     }
     else
     {
-        Layout = "_HomeLayout";
+        Layout = "_UserLayout";
 
     }
 }
@@ -35,7 +35,14 @@
                 <div class="card-body">
                     <form asp-action="Edit" Method="Post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="RoleId" />
+                        <input type="hidden" asp-for="ProfileImage" />
+                        <input type="hidden" asp-for="Password" />
+
+
+
+
                         <div class="form-group" hidden>
                             <label asp-for="ProfileImage" class="control-label"></label>
                             <input asp-for="ProfileImage" class="form-control" />

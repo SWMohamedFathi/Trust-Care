@@ -22,13 +22,16 @@ namespace TrustCare.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             ViewBag.CurrentTime = DateTime.Now;
 
             //var page = _context.Homepages.ToList();
             //return View(page);
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
 
             var homepages = _context.Homepages.ToList();
-            var testmonail = _context.Testimonials.ToList();
+            var testmonail = _context.Testimonials.Include(x=>x.User).ToList();
 
             var model = Tuple.Create<IEnumerable<Homepage>, IEnumerable<Testimonial>>(homepages, testmonail);
             return View(model);

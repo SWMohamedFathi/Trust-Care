@@ -16,7 +16,7 @@ namespace TrustCare.Controllers
         private readonly IWebHostEnvironment webHostEnvironment;
         public UsersController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
-          
+
 
             _context = context;
             this.webHostEnvironment = webHostEnvironment;
@@ -34,6 +34,8 @@ namespace TrustCare.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             if (id == null || _context.Users == null)
             {
                 return NotFound();
@@ -94,6 +96,8 @@ namespace TrustCare.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             if (id == null || _context.Users == null)
             {
                 return NotFound();
@@ -171,7 +175,7 @@ namespace TrustCare.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index","Admin");
+                return RedirectToAction("Index", "Admin");
             }
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", user.RoleId);
             return View(user);

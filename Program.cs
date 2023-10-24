@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TrustCare.Models;
 using Microsoft.AspNetCore.Http;
-
-
-
+using TrustCare.Settings;
+using TrustCare.Services;
 
 namespace TrustCare
 {
@@ -13,6 +12,8 @@ namespace TrustCare
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddTransient<MailingService, MailingService>();
+            builder.Configuration.GetSection("MailSettings").Bind(new MailSettings());
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();           
@@ -32,6 +33,9 @@ namespace TrustCare
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
+
+
+
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

@@ -90,26 +90,29 @@ namespace TrustCare.Controllers
 
             var auth = _context.Users.Where(x => x.UserName == user.UserName && x.Password == user.Password).FirstOrDefault();
 
+
             if (auth != null)
             {
                 var account = _context.Users.Where(x => x.UserId == user.UserId).FirstOrDefault();
                 switch (auth.RoleId)
                 {
                     case 1:
+
                         HttpContext.Session.SetInt32("UserId", (int)auth.UserId);
                         HttpContext.Session.SetInt32("RoleId", (int)auth.RoleId);
                         HttpContext.Session.SetString("FirstName", auth.FirstName);
                         HttpContext.Session.SetString("LastName", auth.LastName);
                         HttpContext.Session.SetString("UserName", auth.UserName);
-
                         HttpContext.Session.SetString("ProfileImage", auth.ProfileImage);
                         HttpContext.Session.SetString("Email", auth.Email);               
                         HttpContext.Session.SetInt32("Phone", (int)auth.Phone);
+                       
 
 
 
                         return RedirectToAction("Index", "Admin");
                     case 2:
+
                         //Var fname = int value 
                         HttpContext.Session.SetInt32("UserId", (int)auth.UserId);
                         HttpContext.Session.SetInt32("RoleId", (int)auth.RoleId);

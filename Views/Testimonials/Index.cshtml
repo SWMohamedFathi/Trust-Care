@@ -29,7 +29,11 @@
                         <th>
                             @Html.DisplayNameFor(model => model.User)
                         </th>
-                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Imagepath)
+
+                        </th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,13 +46,27 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ApprovalStatus)
                             </td>
+                         
                             <td>
-                                @Html.DisplayFor(modelItem => item.User.UserId)
+                                @Html.DisplayFor(modelItem => item.User.FirstName)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.TestimonialId">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.TestimonialId">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.TestimonialId">Delete</a>
+                            @*     <img src="@Url.Content("~/Images/" + item.Imagepath )" asp-append-version="true" width="100" height="100" /> *@
+                                @Html.DisplayFor(modelItem => item.User.ProfileImage)
+                            </td>
+                            <td>
+                                @if (item.ApprovalStatus != null)
+                                {
+
+                                    <div style="text-align: center;">
+                                        <form asp-action="AcceptTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
+                                            <button type="submit" class="btn btn-success">Accept</button>
+                                        </form>
+                                        <form asp-action="RejectTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

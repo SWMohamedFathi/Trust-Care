@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Threading.Tasks;
 using Azure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,6 +30,9 @@ namespace TrustCare.Controllers
             this.httpContextAccessor = httpContextAccessor;
 
         }
+
+       
+
 
         // GET: Subscriptions
         public async Task<IActionResult> Index()
@@ -68,20 +74,40 @@ namespace TrustCare.Controllers
         //}
         public IActionResult Create()
         {
+            //ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            //ViewBag.LastName = HttpContext.Session.GetString("LastName");
+            //ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
+            //ViewBag.CurrentTime = DateTime.Now;
+
+            //var userNames = _context.Users.Select(u => new SelectListItem
+            //{
+            //    Value = u.UserId.ToString(),
+            //    Text = u.FirstName
+            //}).ToList();
+
+            //ViewBag.UserNames = new SelectList(userNames, "Value", "Text");
+
+            //return View();
+
+            // Retrieve user information from the session
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
             ViewBag.LastName = HttpContext.Session.GetString("LastName");
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
-            ViewBag.CurrentTime = DateTime.Now;
 
-            var userNames = _context.Users.Select(u => new SelectListItem
+
+            var subscription = new Subscription
             {
-                Value = u.UserId.ToString(), // Assuming your User model has a UserId property
-                Text = u.FirstName// Replace "UserUsername" with the actual property name containing the username
-            }).ToList();
+              
+                User = new User
+                {
+                    UserId = ViewBag.UserId = HttpContext.Session.GetInt32("UserId"),
+                    FirstName = ViewBag.FirstName = HttpContext.Session.GetString("FirstName")
 
-            ViewBag.UserNames = new SelectList(userNames, "Value", "Text");
+                }
+             
+            };
 
-            return View();
+            return View(subscription);
         }
 
 
@@ -92,13 +118,35 @@ namespace TrustCare.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SubscriptionId,UserId,SubscriptionDate,SubscriptionAmount,PaymentStatus,PaymentMethod")] Subscription subscription)
         {
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(subscription);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", subscription.UserId);
+            //return View(subscription);
             if (ModelState.IsValid)
             {
+
+                // Set UserId based on the session
+                subscription.UserId = HttpContext.Session.GetInt32("UserId");
+
+             
+                subscription.PaymentMethod = "Visa";
+                subscription.SubscriptionDate = ViewBag.CurrentTime = DateTime.Now;
+
+                subscription.SubscriptionAmount = 50 ;
+            
+
+
                 _context.Add(subscription);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", subscription.UserId);
+           
+
+
             return View(subscription);
         }
 

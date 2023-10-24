@@ -47,7 +47,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<About>(entity =>
         {
-            entity.HasKey(e => e.AboutId).HasName("SYS_C008700");
+            entity.HasKey(e => e.AboutId).HasName("SYS_C008324");
 
             entity.ToTable("ABOUT");
 
@@ -71,7 +71,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Bank>(entity =>
         {
-            entity.HasKey(e => e.BankId).HasName("SYS_C008709");
+            entity.HasKey(e => e.BankId).HasName("SYS_C008325");
 
             entity.ToTable("BANK");
 
@@ -96,7 +96,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Beneficiary>(entity =>
         {
-            entity.HasKey(e => e.BeneficiaryId).HasName("SYS_C008693");
+            entity.HasKey(e => e.BeneficiaryId).HasName("SYS_C008332");
 
             entity.ToTable("BENEFICIARIES");
 
@@ -123,12 +123,12 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.Subscription).WithMany(p => p.Beneficiaries)
                 .HasForeignKey(d => d.SubscriptionId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("SYS_C008694");
+                .HasConstraintName("SYS_C008335");
         });
 
         modelBuilder.Entity<ContactU>(entity =>
         {
-            entity.HasKey(e => e.ContactId).HasName("SYS_C008707");
+            entity.HasKey(e => e.ContactId).HasName("SYS_C008330");
 
             entity.ToTable("CONTACT_US");
 
@@ -164,7 +164,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Footer>(entity =>
         {
-            entity.HasKey(e => e.FooterId).HasName("SYS_C008696");
+            entity.HasKey(e => e.FooterId).HasName("SYS_C008331");
 
             entity.ToTable("FOOTER");
 
@@ -188,7 +188,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Homepage>(entity =>
         {
-            entity.HasKey(e => e.HomeId).HasName("SYS_C008698");
+            entity.HasKey(e => e.HomeId).HasName("SYS_C008329");
 
             entity.ToTable("HOMEPAGE");
 
@@ -224,7 +224,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("SYS_C008676");
+            entity.HasKey(e => e.RoleId).HasName("SYS_C008334");
 
             entity.ToTable("ROLES");
 
@@ -240,7 +240,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Subscription>(entity =>
         {
-            entity.HasKey(e => e.SubscriptionId).HasName("SYS_C008690");
+            entity.HasKey(e => e.SubscriptionId).HasName("SYS_C008326");
 
             entity.ToTable("SUBSCRIPTIONS");
 
@@ -269,12 +269,12 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Subscriptions)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("SYS_C008691");
+                .HasConstraintName("SYS_C008336");
         });
 
         modelBuilder.Entity<Testimonial>(entity =>
         {
-            entity.HasKey(e => e.TestimonialId).HasName("SYS_C008702");
+            entity.HasKey(e => e.TestimonialId).HasName("SYS_C008328");
 
             entity.ToTable("TESTIMONIALS");
 
@@ -286,6 +286,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("APPROVAL_STATUS");
+            entity.Property(e => e.Imagepath)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("IMAGEPATH");
             entity.Property(e => e.TestimonialText)
                 .HasMaxLength(1000)
                 .IsUnicode(false)
@@ -297,12 +301,12 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Testimonials)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("SYS_C008703");
+                .HasConstraintName("SYS_C008337");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("SYS_C008687");
+            entity.HasKey(e => e.UserId).HasName("SYS_C008327");
 
             entity.ToTable("USERS");
 
@@ -346,7 +350,7 @@ public partial class ModelContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("SYS_C008688");
+                .HasConstraintName("SYS_C008338");
         });
 
         OnModelCreatingPartial(modelBuilder);

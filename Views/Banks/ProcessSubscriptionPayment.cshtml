@@ -1,0 +1,29 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visa Payment Form</title>
+</head>
+<body>
+    <h2>Enter Visa Card Information</h2>
+    <form method="post" action="ProcessSubscriptionPayment">
+        <!-- Visa Card Number -->
+        <label for="cardNumber">Card Number:</label>
+        <input type="text" id="cardNumber" name="CardNumber" placeholder="Enter Card Number" required>
+        <br>
+
+        <!-- CVV -->
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="Cvv" placeholder="Enter CVV" required>
+        <br>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Make Payment">
+    </form>
+</body>
+</html>
