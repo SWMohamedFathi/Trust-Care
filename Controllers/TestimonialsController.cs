@@ -84,6 +84,8 @@ namespace TrustCare.Controllers
         // GET: Testimonials/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             if (id == null || _context.Testimonials == null)
             {
                 return NotFound();
@@ -159,6 +161,9 @@ namespace TrustCare.Controllers
         //}
         public IActionResult Create()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
+
             // Retrieve user information from the session
             string firstName = HttpContext.Session.GetString("FirstName");
             string lastName = HttpContext.Session.GetString("LastName");
@@ -217,7 +222,7 @@ namespace TrustCare.Controllers
 
                 _context.Add(testimonial);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","User");
             }
 
             return View(testimonial);

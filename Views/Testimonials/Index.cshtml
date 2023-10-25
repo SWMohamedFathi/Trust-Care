@@ -6,11 +6,8 @@
 
 }
 
-<h1>Index</h1>
+<h1>Testmonials</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Testmonials</h6>
@@ -51,16 +48,14 @@
                                 @Html.DisplayFor(modelItem => item.User.FirstName)
                             </td>
                             <td>
-                            @*     <img src="@Url.Content("~/Images/" + item.Imagepath )" asp-append-version="true" width="100" height="100" /> *@
-                                @Html.DisplayFor(modelItem => item.User.ProfileImage)
+                                <img src="@Url.Content("~/Images/" + item.Imagepath )" asp-append-version="true" width="100" height="100" />                      
                             </td>
                             <td>
                                 @if (item.ApprovalStatus != null)
                                 {
-
-                                    <div style="text-align: center;">
+                                    <div class="d-flex justify-content-center">
                                         <form asp-action="AcceptTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
-                                            <button type="submit" class="btn btn-success">Accept</button>
+                                            <button type="submit" class="btn btn-success mr-2">Accept</button>
                                         </form>
                                         <form asp-action="RejectTestimonial" asp-route-testimonialId="@item.TestimonialId" style="display: inline;">
                                             <button type="submit" class="btn btn-danger">Reject</button>

@@ -52,6 +52,8 @@ namespace TrustCare.Controllers
         // GET: Homepages/Create
         public IActionResult Create()
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             return View();
         }
 

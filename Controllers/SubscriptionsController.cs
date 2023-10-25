@@ -365,8 +365,7 @@ namespace TrustCare.Controllers
             {
                 return View("PaymentFailed");
             }
-            //on successful payment, show success page to user.  
-            return View("SuccessView");
+     
 
         }
 

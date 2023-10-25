@@ -16,7 +16,10 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using System.Text;
 
 namespace TrustCare.Controllers
 {
@@ -24,13 +27,62 @@ namespace TrustCare.Controllers
     {
         private readonly MailingService _mailingService;
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public BanksController(ModelContext context, MailingService mailingService)
+
+        public BanksController(ModelContext context, MailingService mailingService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _mailingService = mailingService;
+            this.webHostEnvironment = webHostEnvironment;
+
 
         }
+
+        public string GenerateInvoicePDF(string SubName, DateTime SubDate, decimal Subamount)
+        {
+
+            // Generate a unique file name for the PDF
+            string pdfFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pdf");
+
+            // Create a new document with A4 size and margins
+            Document document = new Document(PageSize.A4, 200, 200, 200, 200);
+
+            try
+            {
+                // Create a PDF writer and open the document for writing
+                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(pdfFileName, FileMode.Create));
+                document.Open();
+
+
+                PdfContentByte cb = writer.DirectContent;
+                cb.SetLineWidth(2); // Set the border line width
+                cb.Rectangle(36, 36, PageSize.A4.Width - 72, PageSize.A4.Height - 72); // Adjust coordinates as needed
+                cb.Stroke();
+                // Add content to the PDF
+                document.Add(new Paragraph("TrustCare"));
+                document.Add(Chunk.NEWLINE);
+                document.Add(Chunk.NEWLINE);
+                document.Add(Chunk.NEWLINE);
+                document.Add(new Paragraph("SubscriptionName: " + SubName));
+                document.Add(new Paragraph("SubscriptionDate: " + SubDate.ToString("yyyy-MM-dd")));
+                document.Add(new Paragraph("SubscriptionAmount: $" + Subamount.ToString("0.00")));
+
+                // Close the document and writer
+                document.Close();
+                writer.Close();
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that might occur during PDF generation
+                Console.WriteLine("Error: " + ex.Message);
+                return null; // Return null to indicate an error
+            }
+
+            return pdfFileName; // Return the file path to the generated PDF
+        }
+
+
         [HttpPost]
         public IActionResult ProcessSubscriptionPayment([Bind("BankId,Owner,CardNumber,Cvv,Balance")] Bank bank) 
         {
@@ -143,13 +195,19 @@ namespace TrustCare.Controllers
 
             var userId = HttpContext.Session.GetInt32("UserId");
 
-            var userInBank = _context.Banks.Where(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv).FirstOrDefault();
-            //var userInBank = _context.Banks.FirstOrDefault(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv);
+            //var userInBank = _context.Banks.Where(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv).FirstOrDefault();
+
+            var userInBank = _context.Banks.FirstOrDefault(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv);
             //var userId = HttpContext.Session.GetInt32("UserId");
 
-            //var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId);
+            var subscribed = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId);
 
-            if (userInBank != null )
+            if (subscribed != null) {
+
+
+                return View("PaymentFailure");
+            }
+            if (userInBank != null && userInBank.Balance >= 40)
             {
 
 
@@ -158,7 +216,7 @@ namespace TrustCare.Controllers
 
                 var subscription = new Subscription
                 {
-                    UserId = userId, // Assign the appropriate user ID
+                    UserId = userId, 
                     SubscriptionDate = DateTime.Now,
                     SubscriptionAmount = 40,
                     PaymentStatus = "Paid",
@@ -170,10 +228,32 @@ namespace TrustCare.Controllers
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("dev.mohamedfathi@gmail.com"));
                 email.To.Add(MailboxAddress.Parse(HttpContext.Session.GetString("Email")));
-                email.Subject = "Test Email Subject2";
-                email.Body = new TextPart(TextFormat.Plain) { Text = "Example Plain Text Message Body" };
+                email.Subject = "Welcome to Trustcare";
+                //email.Body = new TextPart(TextFormat.Plain) { Text = "Example Plain Text Message Body" };
 
-                //email.Attachments = 
+                ViewBag.CurrentTime = DateTime.Now;
+                var pdf = GenerateInvoicePDF(ViewBag.FirstName, ViewBag.CurrentTime, 40);
+
+                var multipart = new Multipart("mixed");
+
+                var text = new TextPart(TextFormat.Plain)
+                {
+                    Text = "Thank you for your subscription. Please find the attached in email.",
+                };
+
+                multipart.Add(text);
+
+                var attachment = new MimePart("application", "pdf")
+                {
+                    Content = new MimeContent(System.IO.File.OpenRead(pdf)), // Attach the PDF here
+                    ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                    ContentTransferEncoding = ContentEncoding.Base64,
+                    FileName = Path.GetFileName(pdf), // Set the file name
+                };
+
+                multipart.Add(attachment);
+
+                email.Body = multipart;
 
                 // send email
                 using var smtp = new SmtpClient();
@@ -225,6 +305,8 @@ namespace TrustCare.Controllers
                 // Handle the case where the Visa data is not valid or the user's balance is insufficient
                 return View("PaymentFailure");
             }
+
+            
             //if (ModelState.IsValid)
             //{
             //    _context.Add(bank);
@@ -232,8 +314,9 @@ namespace TrustCare.Controllers
             //    return RedirectToAction(nameof(Index));
             //}
             //return View(bank);
-        }
 
+        }
+     
         // GET: Banks/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
@@ -326,5 +409,8 @@ namespace TrustCare.Controllers
         {
           return (_context.Banks?.Any(e => e.BankId == id)).GetValueOrDefault();
         }
+
+
+
     }
 }

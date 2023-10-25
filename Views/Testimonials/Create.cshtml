@@ -45,6 +45,8 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "_UserLayout";
+
 
 }
 
@@ -65,11 +67,11 @@
                 <input asp-for="TestimonialText" class="form-control" />
                 <span asp-validation-for="TestimonialText" class="text-danger"></span>
             </div>
-            <div class="form-group">
+           @*  <div class="form-group">
                 <label asp-for="ApprovalStatus" class="control-label"></label>
                 <input asp-for="ApprovalStatus" class="form-control" />
                 <span asp-validation-for="ApprovalStatus" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group">
                 <label asp-for="ImageFile" class="control-label"></label>
                 <input asp-for="ImageFile" class="form-control" />

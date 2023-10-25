@@ -18,6 +18,7 @@ namespace TrustCare.Controllers
 
             ViewBag.UsersCount = _context.Users.Count();
             ViewBag.SubCount = _context.Subscriptions.Count();
+            ViewBag.BenefiCount = _context.Beneficiaries.Count(b => b.ApprovalStatus == "Pending");
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             ViewBag.LastName = HttpContext.Session.GetString("LastName");
@@ -27,13 +28,14 @@ namespace TrustCare.Controllers
             ViewBag.Dataofbirth = HttpContext.Session.GetString("Dataofbirth");
             ViewBag.Email = HttpContext.Session.GetString("Email");
             ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
+            ViewBag.RoleId = HttpContext.Session.GetInt32("RoleId");
+
 
 
 
 
             return View();
         }
-       
 
 
 

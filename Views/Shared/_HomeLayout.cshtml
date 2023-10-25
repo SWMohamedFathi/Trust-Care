@@ -102,8 +102,39 @@
                 <a href="/Home/ContactUs" class="nav-item nav-link">Contact Us</a>
             </div>
         </div>
-        <a href="/Authentcation/Register" class="btn btn-primary px-3 d-none d-lg-block">Register</a>
-        <a href="/Authentcation/Login" class="btn btn-primary px-3 d-none d-lg-block ms-3">Login</a>
+        @if (ViewBag.RoleId == 2)
+        {
+
+            <li class="nav-item dropdown no-arrow show">
+                <a class="nav-link dropdown-toggle mb-4" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    @* <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.FirstName</span> *@
+                    <img class="img-profile rounded-circle" src="~/Images/@ViewBag.ProfileImage" width="50" height="50">
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in show" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/Users/Edit/@ViewBag.UserId">
+
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Profile
+                    </a>
+                    <a class="dropdown-item" href="User/Index">
+                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                        MyDashboard
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
+      
+        }
+        else
+        {
+            <a href="/Authentcation/Register" class="btn btn-primary px-3 d-none d-lg-block">Register</a>
+            <a href="/Authentcation/Login" class="btn btn-primary px-3 d-none d-lg-block ms-3">Login</a>
+        }
     </nav>
     <!-- Navbar End -->
     @RenderBody()
@@ -191,7 +222,39 @@
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
         <i class="bi bi-arrow-up"></i>
     </a>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" asp-action="Logout" asp-controller="Home">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/DashboardAssets/vendor/jquery/jquery.min.js"></script>
+    <script src="~/DashboardAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Core plugin JavaScript-->
+    <script src="~/DashboardAssets/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/DashboardAssets/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="~/DashboardAssets/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/DashboardAssets/js/demo/chart-area-demo.js"></script>
+    <script src="~/DashboardAssets/js/demo/chart-pie-demo.js"></script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

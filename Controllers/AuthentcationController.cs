@@ -88,7 +88,7 @@ namespace TrustCare.Controllers
         public async Task<IActionResult> Login([Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
         {
 
-            var auth = _context.Users.Where(x => x.UserName == user.UserName && x.Password == user.Password).FirstOrDefault();
+            var auth = _context.Users.Where(x => x.Email == user.UserName && x.Password == user.Password).FirstOrDefault();
 
 
             if (auth != null)

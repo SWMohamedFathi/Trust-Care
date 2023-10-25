@@ -6,18 +6,17 @@
 
 }
 
-<h1>Index</h1>
+<h1>Beneficiaries</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<link href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" rel="stylesheet" />
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Beneficiaries</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table id="example1" class="display expandable-table" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -32,7 +31,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Subscription)
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -51,9 +52,17 @@
                 @Html.DisplayFor(modelItem => item.Subscription.SubscriptionId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BeneficiaryId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BeneficiaryId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BeneficiaryId">Delete</a>
+                                @if (item.ApprovalStatus != null)
+                                {
+                                    <div class="d-flex justify-content-center">
+                                        <form asp-action="AcceptBeneficiary" asp-route-BeneficiaryId="@item.BeneficiaryId" style="display: inline;">
+                                            <button type="submit" class="btn btn-success mr-2">Accept</button>
+                                        </form>
+                                        <form asp-action="RejectBeneficiary" asp-route-BeneficiaryId="@item.BeneficiaryId" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                }
             </td>
         </tr>
 }
@@ -62,3 +71,31 @@
 </div>
 </div>
 </div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js" defer></script>
+
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js" defer></script>
+<script>
+    $(document).ready(function () {
+        $('#example1').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'pdfHtml5'
+            ]
+        });
+    });
+
+</script>
