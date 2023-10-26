@@ -64,6 +64,7 @@ namespace TrustCare.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HomeId,Logo,SectionName,ContentText,SlideImageImage,HeadingOne,HeadingThree,ImageFile ,ImageLogo")] Homepage homepage)
         {
+
             if (ModelState.IsValid)
             {
                 if (homepage.ImageFile != null)
@@ -107,6 +108,9 @@ namespace TrustCare.Controllers
         // GET: Homepages/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
+            ViewBag.LastName = HttpContext.Session.GetString("LastName");
             if (id == null || _context.Homepages == null)
             {
                 return NotFound();

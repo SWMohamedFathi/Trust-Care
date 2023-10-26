@@ -40,7 +40,6 @@ namespace TrustCare.Controllers
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
@@ -64,8 +63,9 @@ namespace TrustCare.Controllers
                     user.ProfileImage = fileName;
                 }
                 var account = _context.Users.Where(x => x.UserName == user.UserName && x.Email == user.Email).FirstOrDefault();
-                if (account == null) {
-
+                if (account == null)
+                {
+                    ViewBag.RoleId = 2;
                     user.RoleId = 2;
                     _context.Add(user);
                     await _context.SaveChangesAsync();
@@ -83,13 +83,15 @@ namespace TrustCare.Controllers
             return View(user);
         }
 
+      
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
         {
 
-            var auth = _context.Users.Where(x => x.Email == user.UserName && x.Password == user.Password).FirstOrDefault();
-
+            var auth = _context.Users.Where(x => x.UserName == user.UserName && x.Password == user.Password).FirstOrDefault();
 
             if (auth != null)
             {

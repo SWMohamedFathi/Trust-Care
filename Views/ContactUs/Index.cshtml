@@ -20,12 +20,6 @@
                 @Html.DisplayNameFor(model => model.Subject)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
@@ -44,22 +38,11 @@
                 @Html.DisplayFor(modelItem => item.Subject)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ContactId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ContactId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
-            </td>
+            </td>     
         </tr>
 }
     </tbody>

@@ -39,7 +39,7 @@ namespace TrustCare.Controllers
 
         }
 
-        public string GenerateInvoicePDF(string SubName, DateTime SubDate, decimal Subamount)
+        public string GeneratePDF(string SubName, DateTime SubDate, decimal Subamount)
         {
 
             // Generate a unique file name for the PDF
@@ -83,44 +83,7 @@ namespace TrustCare.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult ProcessSubscriptionPayment([Bind("BankId,Owner,CardNumber,Cvv,Balance")] Bank bank) 
-        {
-            // Assuming VisaData is a class that represents the user's input from the form
-
-            // Check if the user exists in the Bank table
-            var userInBank = _context.Banks.FirstOrDefault(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv);
-            var userId = HttpContext.Session.GetInt32("UserId");
-
-            //var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId);
-
-            if (userInBank != null && userInBank.Balance >= 50)
-            {
-                // Deduct $50 from the user's balance in the Bank table
-                userInBank.Balance -= 50;
-
-                // Create a new Subscription record
-                var subscription = new Subscription
-                {
-                    UserId = userId, // Assign the appropriate user ID
-                    SubscriptionDate = DateTime.Now,
-                    SubscriptionAmount = 50,
-                    PaymentStatus = "Paid",
-                    PaymentMethod = "Visa" // You can set the payment method accordingly
-                };
-
-                _context.Subscriptions.Add(subscription);
-                _context.SaveChanges();
-
-                // Redirect or return a success view
-                return View("PaymentSuccess");
-            }
-            else
-            {
-                // Handle the case where the Visa data is not valid or the user's balance is insufficient
-                return View("PaymentFailure");
-            }
-        }
+     
         // GET: Banks
         public async Task<IActionResult> Index()
         {
@@ -195,15 +158,17 @@ namespace TrustCare.Controllers
 
             var userId = HttpContext.Session.GetInt32("UserId");
 
-            //var userInBank = _context.Banks.Where(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv).FirstOrDefault();
+           
 
             var userInBank = _context.Banks.FirstOrDefault(b => b.CardNumber == b.CardNumber && b.Cvv == b.Cvv);
-            //var userId = HttpContext.Session.GetInt32("UserId");
+          
 
             var subscribed = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId);
 
-            if (subscribed != null) {
+            if (subscribed != null)
+            {
 
+                ViewBag.notsubscribed = "notsubscribed";
 
                 return View("PaymentFailure");
             }
@@ -232,7 +197,7 @@ namespace TrustCare.Controllers
                 //email.Body = new TextPart(TextFormat.Plain) { Text = "Example Plain Text Message Body" };
 
                 ViewBag.CurrentTime = DateTime.Now;
-                var pdf = GenerateInvoicePDF(ViewBag.FirstName, ViewBag.CurrentTime, 40);
+                var pdf = GeneratePDF(ViewBag.FirstName, ViewBag.CurrentTime, 40);
 
                 var multipart = new Multipart("mixed");
 
@@ -263,58 +228,16 @@ namespace TrustCare.Controllers
                 smtp.Disconnect(true);
                 
 
-                //string userEmail = "angularteamwork@gmail.com"; // Replace with the user's email
-                //string subject = "Thank you for your subscription!";
-                //string body = "Your subscription has been successfully processed. Thank you for choosing our service.";
-                //await _mailingService.SendEmailAsync(userEmail, subject, body);
-
-                //using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"))
-                //{
-                //    smtpClient.Credentials = new NetworkCredential("devmohamedfathi@gmail.com", "hzyj mzsn sstr sakn");
-                //    smtpClient.Port = 587;
-                //    smtpClient.UseDefaultCredentials = false;
-                //    smtpClient.EnableSsl = true;
-
-                //    using (MailMessage message = new MailMessage())
-                //    {
-                //        message.From = new MailAddress("devmohamedfathi@gmail.com");
-                //        message.To.Add(userEmail);
-                //        message.Subject = subject;
-                //        message.Body = body;
-                //        message.IsBodyHtml = false;
-
-                //        // Create a PDF invoice
-                //        // You can use a library like iTextSharp or another PDF library to generate the invoice.
-
-                //        // Attach the PDF invoice to the email
-                //        // Replace "invoice.pdf" with the actual filename and path of your PDF invoice.
-                //        //Attachment attachment = new Attachment("invoice.pdf", MediaTypeNames.Application.Pdf);
-                //        //message.Attachments.Add(attachment);
-                //        smtpClient.Send(message);
-
-                //    }
-
-                //    await _context.SaveChangesAsync();
-
-                //}
-                // Redirect or return a success view
-                return View("PaymentSuccess");
+       
+                return View("PaymentSuccess","Subscriptions");
             }
             else
             {
-                // Handle the case where the Visa data is not valid or the user's balance is insufficient
-                return View("PaymentFailure");
+                
+                return View("PaymentFalier");
             }
 
-            
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(bank);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(bank);
-
+ 
         }
      
         // GET: Banks/Edit/5

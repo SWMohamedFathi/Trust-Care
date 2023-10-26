@@ -41,29 +41,48 @@ namespace TrustCare.Controllers
             ViewBag.LastName = HttpContext.Session.GetString("LastName");
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             var modelContext = _context.Beneficiaries.Include(b => b.Subscription);
+
+          
+
             return View(await modelContext.ToListAsync());
         }
 
 
       
 
+
         public async Task<IActionResult> AcceptBeneficiary(decimal BeneficiaryId)
         {
             var Beneficiary = await _context.Beneficiaries.FindAsync(BeneficiaryId);
+
+            var Beneficiar = _context.Beneficiaries.ToList();
+            var Subscrip = _context.Subscriptions.ToList();
+            var user = _context.Users.ToList();
+
+
+
+            var model = from b in Beneficiar where b.BeneficiaryId == BeneficiaryId
+                        join s in Subscrip on b.SubscriptionId equals s.SubscriptionId
+                        join u in user on s.UserId equals u.UserId
+                        select new { Beneficiar = b, Subscrip = s, User = u };
+
+            var selectedUserEmail = model.FirstOrDefault()?.User?.Email;
+            var selectedRelation = model.FirstOrDefault()?.Beneficiar.Relationship;
+
+
 
             if (Beneficiary != null)
             {
                 Beneficiary.ApprovalStatus = "Accepted";
                 await _context.SaveChangesAsync();
-
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("dev.mohamedfathi@gmail.com"));
-                email.To.Add(MailboxAddress.Parse(HttpContext.Session.GetString("Email")));
+                email.To.Add(MailboxAddress.Parse(selectedUserEmail));
                 email.Subject = "Beneficiary has been added";
                 //email.Body = new TextPart(TextFormat.Plain) { Text = "Example Plain Text Message Body" };
 
                 ViewBag.CurrentTime = DateTime.Now;
-                var pdf = GenerateInvoicePDF(ViewBag.FirstName, ViewBag.CurrentTime, 50);
+                var pdf = GeneratePDF(ViewBag.FirstName, ViewBag.CurrentTime, selectedRelation);
 
                 var multipart = new Multipart("mixed");
 
@@ -145,11 +164,12 @@ namespace TrustCare.Controllers
             return View(beneficiary);
         }
 
-        public string GenerateInvoicePDF(string SubName, DateTime SubDate, decimal Subamount)
+        public string GeneratePDF(string SubName, DateTime SubDate ,string relation)
         {
 
             // Generate a unique file name for the PDF
-            string pdfFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pdf");
+            string pdfName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pdf");
+
 
             // Create a new document with A4 size and margins
             Document document = new Document(PageSize.A4, 200, 200, 200, 200);
@@ -157,7 +177,7 @@ namespace TrustCare.Controllers
             try
             {
                 // Create a PDF writer and open the document for writing
-                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(pdfFileName, FileMode.Create));
+                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(pdfName, FileMode.Create));
                 document.Open();
 
 
@@ -170,9 +190,11 @@ namespace TrustCare.Controllers
                 document.Add(Chunk.NEWLINE);
                 document.Add(Chunk.NEWLINE);
                 document.Add(Chunk.NEWLINE);
-                document.Add(new Paragraph("SubscriptionName: " + SubName));
-                document.Add(new Paragraph("SubscriptionDate: " + SubDate.ToString("yyyy-MM-dd")));
-                document.Add(new Paragraph("SubscriptionAmount: $" + Subamount.ToString("0.00")));
+                document.Add(new Paragraph("Your request to add your beneficiary has been accepted"));
+                document.Add(Chunk.NEWLINE);
+                document.Add(new Paragraph("Relation of Subscribed: " + relation));
+                document.Add(new Paragraph("Date added: " + SubDate.ToString("yyyy-MM-dd")));
+                //document.Add(new Paragraph("SubscriptionAmount: $" + Subamount.ToString("0.00")));
 
                 // Close the document and writer
                 document.Close();
@@ -185,10 +207,11 @@ namespace TrustCare.Controllers
                 return null; // Return null to indicate an error
             }
 
-            return pdfFileName; // Return the file path to the generated PDF
+            return pdfName; // Return the file path to the generated PDF
         }
-        // GET: Beneficiaries/Create
-        public IActionResult Create( decimal? SubscriptionId)
+
+
+        public IActionResult Create(decimal? SubscriptionId)
         {
 
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
@@ -200,6 +223,7 @@ namespace TrustCare.Controllers
             ViewBag.Dataofbirth = HttpContext.Session.GetString("Dataofbirth");
             ViewBag.Email = HttpContext.Session.GetString("Email");
             ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
+            ViewBag.SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId");
 
 
             //var subscription = _context.Subscriptions.Where(x => x.SubscriptionId == SubscriptionId).FirstOrDefault();
@@ -215,11 +239,11 @@ namespace TrustCare.Controllers
             //    return View(beneficiary);
             //}
 
-          
-            return View(); 
-                                                   //ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
-                                                   //ViewBag.LastName = HttpContext.Session.GetString("LastName");
-                                                   //ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
+
+            return View();
+            //ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
+            //ViewBag.LastName = HttpContext.Session.GetString("LastName");
+            //ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
 
 
             //var beneficiary = new Beneficiary
@@ -264,16 +288,16 @@ namespace TrustCare.Controllers
 
 
             ViewBag.SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId");
-            Console.WriteLine(subscription);
+        
 
-            if (subscription == null)
-            {
-                ViewBag.NotSub = "You Must be subscribed";
-                return RedirectToAction("Create", "Banks");
-            }
+            //if (subscription == null)
+            //{
+            //    ViewBag.NotSub = "You Must be subscribed";
+            //    return RedirectToAction("Create", "Banks");
+            //}
             HttpContext.Session.SetInt32("SubscriptionId", (int)subscription.SubscriptionId);
 
-                
+
             if (ModelState.IsValid)
             {
                 if (beneficiary.Proof_Document != null)
@@ -291,13 +315,13 @@ namespace TrustCare.Controllers
                 }
 
 
-                beneficiary.SubscriptionId = ViewBag.SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId");
+                beneficiary.SubscriptionId =  HttpContext.Session.GetInt32("SubscriptionId");
 
 
                 beneficiary.ApprovalStatus = "Pending";
                 _context.Beneficiaries.Add(beneficiary);
                 _context.SaveChanges();
-                
+
 
 
 
@@ -306,8 +330,11 @@ namespace TrustCare.Controllers
 
 
             return View(beneficiary);
-           
+
         }
+
+
+     
 
         // GET: Beneficiaries/Edit/5
         public async Task<IActionResult> Edit(decimal? id)

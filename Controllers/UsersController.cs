@@ -175,7 +175,7 @@ namespace TrustCare.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("Index", "User");
             }
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", user.RoleId);
             return View(user);

@@ -57,15 +57,7 @@ namespace TrustCare.Controllers
     
         public async Task<IActionResult> RejectTestimonial(decimal testimonialId)
         {
-            //var testimonial = await _context.Testimonials.FindAsync(testimonialId);
-
-            //if (testimonial != null)
-            //{
-            //    testimonial.ApprovalStatus = "Rejected";
-            //    await _context.SaveChangesAsync();
-            //}
-
-            //return RedirectToAction("Index");
+            
             var testimonial = await _context.Testimonials.FindAsync(testimonialId);
 
             if (testimonial != null)
@@ -102,63 +94,7 @@ namespace TrustCare.Controllers
             return View(testimonial);
         }
 
-        //// GET: Testimonials/Create
-        //public IActionResult Create()
-        //{
-        //    //if (id == null || _context.Testimonials == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
-
-        //    //var testimonial = await _context.Testimonials.FindAsync(id);
-        //    //if (testimonial == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
-        //    ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
-        //    ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
-        //    ViewBag.LastName = HttpContext.Session.GetString("LastName");
-
-        //    //////ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
-        //    ////return View(testimonial);
-        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
-        //    return View();
-
-
-        //}
-
-        //// POST: Testimonials/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("TestimonialId,UserId,TestimonialText,ApprovalStatus,ImageFile,Imagepath")] Testimonial testimonial)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (testimonial.ImageFile != null)
-        //        {
-        //            string wwwRootPath = webHostEnvironment.WebRootPath;
-
-        //            string fileName = Guid.NewGuid().ToString() + testimonial.ImageFile.FileName;
-
-        //            string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
-
-        //            using (var fileStream = new FileStream(path, FileMode.Create))
-        //            {
-        //                await testimonial.ImageFile.CopyToAsync(fileStream);
-        //            }
-
-        //            testimonial.Imagepath = fileName;
-        //        }
-
-        //        _context.Add(testimonial);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", testimonial.UserId);
-        //    return View(testimonial);
-        //}
+        
         public IActionResult Create()
         {
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");

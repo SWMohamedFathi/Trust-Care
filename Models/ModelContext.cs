@@ -136,10 +136,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER")
                 .HasColumnName("CONTACT_ID");
-            entity.Property(e => e.Address)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasColumnName("ADDRESS");
+          
             entity.Property(e => e.Email)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -151,11 +148,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(200)
                 .IsUnicode(false)
-                .HasColumnName("NAME");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("PHONE");
+                .HasColumnName("NAME");          
             entity.Property(e => e.Subject)
                 .HasMaxLength(200)
                 .IsUnicode(false)

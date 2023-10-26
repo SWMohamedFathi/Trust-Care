@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Net;
-using System.Threading.Tasks;
-using Azure;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿
+
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
 using PayPal.Api;
 using TrustCare.Models;
 
+using MailKit.Security;
+
+using MimeKit.Text;
+using MimeKit;
+
+using MailKit.Net.Smtp;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using System.Text;
 namespace TrustCare.Controllers
 {
     public class SubscriptionsController : Controller
@@ -246,6 +251,7 @@ namespace TrustCare.Controllers
             return (_context.Subscriptions?.Any(e => e.SubscriptionId == id)).GetValueOrDefault();
         }
 
+    
 
         //Get
         public IActionResult Search()
@@ -384,65 +390,7 @@ namespace TrustCare.Controllers
             return this.payment.Execute(apiContext, paymentExecution);
         }
 
-        //private Payment CreatePayment(APIContext apiContext, string redirectUrl, string blogId)
-        //{
-        //    // Create itemlist and add item objects to it
-        //    var itemList = new ItemList()
-        //    {
-        //        items = new List<Item>()
-        //    };
 
-        //    // Adding Item Details for the subscription
-        //    itemList.items.Add(new Item()
-        //    {
-        //        name = "Subscription Payment",
-        //        currency = "USD",
-        //        price = "50.00",  // Set the subscription amount to $50
-        //        quantity = "1",
-        //        sku = "subscription"
-        //    });
-
-        //    var payer = new Payer()
-        //    {
-        //        payment_method = "paypal"
-        //    };
-
-        //    // Configure Redirect Urls here with RedirectUrls object
-        //    var redirUrls = new RedirectUrls()
-        //    {
-        //        cancel_url = redirectUrl + "&Cancel=true",
-        //        return_url = redirectUrl
-        //    };
-
-        //    // Final amount with details
-        //    var amount = new Amount()
-        //    {
-        //        currency = "USD",
-        //        total = "50.00",  // Total should be equal to the subscription amount
-        //    };
-
-        //    var transactionList = new List<Transaction>();
-
-        //    // Adding description about the transaction
-        //    transactionList.Add(new Transaction()
-        //    {
-        //        description = "Subscription Payment",
-        //        invoice_number = Guid.NewGuid().ToString(), // Generate an Invoice No
-        //        amount = amount,
-        //        item_list = itemList
-        //    });
-
-        //    this.payment = new Payment()
-        //    {
-        //        intent = "sale",
-        //        payer = payer,
-        //        transactions = transactionList,
-        //        redirect_urls = redirUrls
-        //    };
-
-        //    // Create a payment using an APIContext
-        //    return this.payment.Create(apiContext);
-        //}
 
         private Payment CreatePayment(APIContext apiContext, string redirectUrl, string blogId)
         {
@@ -505,6 +453,9 @@ namespace TrustCare.Controllers
             return this.payment.Create(apiContext);
         }
 
+
+
+ 
 
     }
 }
