@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,14 @@ namespace TrustCare.Controllers
     public class AboutsController : Controller
     {
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public AboutsController(ModelContext context)
+
+        public AboutsController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            this.webHostEnvironment = webHostEnvironment;
+
         }
 
         // GET: Abouts
@@ -59,6 +64,22 @@ namespace TrustCare.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (about.ImageFile != null)
+                {
+                    string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                    string fileName = Guid.NewGuid().ToString() + about.ImageFile.FileName;
+
+                    string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await about.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    about.ImagePath = fileName;
+                }
+
                 _context.Add(about);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,6 +119,22 @@ namespace TrustCare.Controllers
             {
                 try
                 {
+                    if (about.ImageFile != null)
+                    {
+                        string wwwRootPath = webHostEnvironment.WebRootPath;
+
+                        string fileName = Guid.NewGuid().ToString() + about.ImageFile.FileName;
+
+                        string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await about.ImageFile.CopyToAsync(fileStream);
+                        }
+
+                        about.ImagePath = fileName;
+                    }
+
                     _context.Update(about);
                     await _context.SaveChangesAsync();
                 }

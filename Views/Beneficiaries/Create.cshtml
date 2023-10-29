@@ -1,23 +1,26 @@
-﻿@model TrustCare.Models.Beneficiary
+﻿@* @model TrustCare.Models.Beneficiary
 
 @{
     ViewData["Title"] = "Create";
     Layout = "_UserLayout";
 
 }
-
-<h1>Create</h1>
+ *@
+@* <h1>Create</h1>
 
 <h4>Beneficiary</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+        <form  asp-action="Create"   method="POST" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+ @*            <div class="form-group">
                 <label asp-for="SubscriptionId" class="control-label"></label>
-                @* <select asp-for="SubscriptionId" class ="form-control" asp-items="ViewBag.SubscriptionId"></select> *@
-            </div>
+            <select asp-for="SubscriptionId" class ="form-control" asp-items="ViewBag.SubscriptionId"></select> 
+            </div> *@
+
+@*             <input type="hidden" asp-for="SubscriptionId" value=@ViewBag.SubscriptionId />
+
             <div class="form-group">
                 <label asp-for="Relationship" class="control-label"></label>
                 <input asp-for="Relationship" class="form-control" />
@@ -43,3 +46,49 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+ *@
+
+@model TrustCare.Models.Beneficiary
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_UserLayout";
+
+}
+
+
+<h4>ADDBeneficiary</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @* <label asp-for="SubscriptionId" class="control-label"></label> *@
+                <input type="hidden" asp-for="SubscriptionId" value=@ViewBag.SubscriptionId />
+                @* <select asp-for="SubscriptionId" class ="form-control" asp-items="ViewBag.SubscriptionId"></select> *@
+            </div>
+            <div class="form-group">
+                <label asp-for="Relationship" class="control-label"></label>
+                @* <input asp-for="Relationship" class="form-control" /> *@
+                <span asp-validation-for="Relationship" class="text-danger"></span>
+                <select asp-for="Relationship" id="Relationship" name="Relationship" class="btn btn-light dropdown-toggle">
+                    <option value="Son">Son </option>
+                    <option value="Daughter">Daughter </option>
+                    <option value="Husband ">Husband </option>
+                    <option value="Wife">Wife</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Proof_Document" class="control-label"></label>
+                <input asp-for="Proof_Document" class="form-control" required accept="jpg" />
+                <span asp-validation-for="Proof_Document" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

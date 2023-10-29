@@ -11,7 +11,6 @@ public partial class ContactU
 
     public string? Subject { get; set; }
 
-  
     public string? Email { get; set; }
 
     public string? Message { get; set; }

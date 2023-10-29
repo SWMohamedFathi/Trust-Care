@@ -42,13 +42,13 @@ namespace TrustCare.Controllers
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             var modelContext = _context.Beneficiaries.Include(b => b.Subscription);
 
-          
+
 
             return View(await modelContext.ToListAsync());
         }
 
 
-      
+
 
 
         public async Task<IActionResult> AcceptBeneficiary(decimal BeneficiaryId)
@@ -130,7 +130,7 @@ namespace TrustCare.Controllers
             if (Beneficiary != null)
             {
                 Beneficiary.ApprovalStatus = "Rejected";
-                _context.Beneficiaries.Remove(Beneficiary);  
+                _context.Beneficiaries.Remove(Beneficiary);
 
                 await _context.SaveChangesAsync();
 
@@ -164,7 +164,7 @@ namespace TrustCare.Controllers
             return View(beneficiary);
         }
 
-        public string GeneratePDF(string SubName, DateTime SubDate ,string relation)
+        public string GeneratePDF(string SubName, DateTime SubDate, string relation)
         {
 
             // Generate a unique file name for the PDF
@@ -194,7 +194,7 @@ namespace TrustCare.Controllers
                 document.Add(Chunk.NEWLINE);
                 document.Add(new Paragraph("Relation of Subscribed: " + relation));
                 document.Add(new Paragraph("Date added: " + SubDate.ToString("yyyy-MM-dd")));
-                //document.Add(new Paragraph("SubscriptionAmount: $" + Subamount.ToString("0.00")));
+              
 
                 // Close the document and writer
                 document.Close();
@@ -213,7 +213,6 @@ namespace TrustCare.Controllers
 
         public IActionResult Create(decimal? SubscriptionId)
         {
-
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             ViewBag.LastName = HttpContext.Session.GetString("LastName");
@@ -222,45 +221,20 @@ namespace TrustCare.Controllers
             ViewBag.Password = HttpContext.Session.GetString("Password");
             ViewBag.Dataofbirth = HttpContext.Session.GetString("Dataofbirth");
             ViewBag.Email = HttpContext.Session.GetString("Email");
-            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
-            ViewBag.SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId");
+            var id = HttpContext.Session.GetInt32("UserId");
+            var subscription = _context.Subscriptions.Where(x => x.UserId == id).FirstOrDefault();
 
 
-            //var subscription = _context.Subscriptions.Where(x => x.SubscriptionId == SubscriptionId).FirstOrDefault();
 
-            //if (subscription != null)
-            //{
-            //    HttpContext.Session.SetInt32("SubscriptionId", (int)subscription.SubscriptionId);
-            //    var beneficiary = new Beneficiary
-            //    {
-            //        SubscriptionId = subscription.SubscriptionId
-            //    };
+            ViewBag.SubscriptionId = subscription.SubscriptionId;
 
-            //    return View(beneficiary);
-            //}
+
+
 
 
             return View();
-            //ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
-            //ViewBag.LastName = HttpContext.Session.GetString("LastName");
-            //ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
 
 
-            //var beneficiary = new Beneficiary
-            //{
-
-            //    Subscription = new Subscription
-            //    {
-            //        UserId = ViewBag.UserId = HttpContext.Session.GetInt32("UserId"),
-
-            //    }
-
-
-            //};
-
-            //return View(beneficiary);
-            ////ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "SubscriptionId", "SubscriptionId");
-            //return View();
         }
 
         // POST: Beneficiaries/Create
@@ -275,31 +249,16 @@ namespace TrustCare.Controllers
             ViewBag.FirstName = HttpContext.Session.GetString("FirstName");
             ViewBag.ProfileImage = HttpContext.Session.GetString("ProfileImage");
             ViewBag.LastName = HttpContext.Session.GetString("LastName");
-            ViewBag.Phone = HttpContext.Session.GetInt32("Phone");
-            ViewBag.UserName = HttpContext.Session.GetString("UserName");
-            ViewBag.Password = HttpContext.Session.GetString("Password");
-            ViewBag.Dataofbirth = HttpContext.Session.GetString("Dataofbirth");
-            ViewBag.Email = HttpContext.Session.GetString("Email");
-            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
-            ViewBag.CurrentTime = DateTime.Now;
+            //ViewBag.CurrentTime = DateTime.Now;
+            var subinfo = _context.Subscriptions.Where(x => x.SubscriptionId == beneficiary.SubscriptionId).FirstOrDefault();
 
-            var userid = HttpContext.Session.GetInt32("UserId");
-            var subscription = _context.Subscriptions.FirstOrDefault(sub => sub.UserId == userid);
-
-
-            ViewBag.SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId");
-        
-
-            //if (subscription == null)
-            //{
-            //    ViewBag.NotSub = "You Must be subscribed";
-            //    return RedirectToAction("Create", "Banks");
-            //}
-            HttpContext.Session.SetInt32("SubscriptionId", (int)subscription.SubscriptionId);
-
-
-            if (ModelState.IsValid)
+            if (subinfo != null)
             {
+
+                beneficiary.ApprovalStatus = "On Hold";
+
+
+                // add image to the app
                 if (beneficiary.Proof_Document != null)
                 {
                     string wwwRootPath = webHostEnvironment.WebRootPath;
@@ -313,25 +272,16 @@ namespace TrustCare.Controllers
 
                     beneficiary.ProofDocument = fileName;
                 }
-
-
-                beneficiary.SubscriptionId =  HttpContext.Session.GetInt32("SubscriptionId");
-
-
-                beneficiary.ApprovalStatus = "Pending";
-                _context.Beneficiaries.Add(beneficiary);
-                _context.SaveChanges();
-
-
-
-
-
+                //
+                _context.Add(beneficiary);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Beneficiaries");
             }
-
+            ViewData["SubscriptionId"] = new SelectList(_context.Subscriptions, "SubscriptionId", "SubscriptionId", beneficiary.SubscriptionId);
 
             return View(beneficiary);
-
         }
+
 
 
      

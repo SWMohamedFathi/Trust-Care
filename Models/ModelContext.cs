@@ -327,8 +327,11 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("PASSWORD");
             entity.Property(e => e.Phone)
-                .HasColumnType("NUMBER(20)")
-                .HasColumnName("PHONE");
+                        //.HasColumnType("NUMBER(20)")
+                        //.HasColumnName("PHONE");
+                     .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("PHONE");
             entity.Property(e => e.ProfileImage)
                 .HasMaxLength(1000)
                 .IsUnicode(false)

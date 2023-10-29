@@ -27,7 +27,8 @@
             @Html.DisplayNameFor(model => model.ImagePath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
+            <img src="@Url.Content("~/Images/" + Model.ImageFile )" asp-append-version="true" width="100" height="100" />
+
         </dd>
     </dl>
     

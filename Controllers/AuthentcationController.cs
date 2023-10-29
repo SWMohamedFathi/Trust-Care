@@ -75,6 +75,8 @@ namespace TrustCare.Controllers
                 else
                 {
                     ViewBag.Error = "Email is already used, please try another  one.";
+                    return View(user);
+
                 }
 
 
@@ -91,7 +93,7 @@ namespace TrustCare.Controllers
         public async Task<IActionResult> Login([Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
         {
 
-            var auth = _context.Users.Where(x => x.UserName == user.UserName && x.Password == user.Password).FirstOrDefault();
+            var auth = _context.Users.Where(x => x.UserName == user.UserName || x.Email == user.Email && x.Password == user.Password).FirstOrDefault();
 
             if (auth != null)
             {
@@ -107,7 +109,7 @@ namespace TrustCare.Controllers
                         HttpContext.Session.SetString("UserName", auth.UserName);
                         HttpContext.Session.SetString("ProfileImage", auth.ProfileImage);
                         HttpContext.Session.SetString("Email", auth.Email);               
-                        HttpContext.Session.SetInt32("Phone", (int)auth.Phone);
+                        HttpContext.Session.SetString("Phone", auth.Phone);
                        
 
 
@@ -127,7 +129,7 @@ namespace TrustCare.Controllers
                         }
 
                         HttpContext.Session.SetString("Email", auth.Email);
-                        HttpContext.Session.SetInt32("Phone", (int)auth.Phone);
+                        HttpContext.Session.SetString("Phone", auth.Phone);
                         return RedirectToAction("Index", "Home");
 
 

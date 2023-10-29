@@ -41,8 +41,9 @@ namespace TrustCare.Controllers
 
             var homepages = _context.Homepages.ToList();
             var testmonail = _context.Testimonials.Include(x=>x.User).ToList();
+            var about = _context.Abouts.ToList();
 
-            var model = Tuple.Create<IEnumerable<Homepage>, IEnumerable<Testimonial>>(homepages, testmonail);
+            var model = Tuple.Create<IEnumerable<Homepage>, IEnumerable<Testimonial>, IEnumerable<About>>(homepages, testmonail, about);
             return View(model);
 
 

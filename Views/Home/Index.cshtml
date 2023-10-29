@@ -1,4 +1,5 @@
-﻿@model Tuple<IEnumerable<TrustCare.Models.Homepage>, IEnumerable<TrustCare.Models.Testimonial>>
+﻿@model Tuple<IEnumerable<TrustCare.Models.Homepage>, IEnumerable<TrustCare.Models.Testimonial>, IEnumerable<TrustCare.Models.About>>
+
 
 
 
@@ -63,8 +64,8 @@
                 <div class="position-relative overflow-hidden rounded ps-5 pt-5 h-100"
                      style="min-height: 400px">
                     <img class="position-absolute w-100 h-100"
-                         src="~/HomeAssets/img/about.jpg"
-                         alt=""
+                             src="                 @Model.Item3.FirstOrDefault()?.ImageFile"
+                             alt=""
                          style="object-fit: cover" />
                     <div class="position-absolute top-0 start-0 bg-white rounded pe-3 pb-3"
                          style="width: 200px; height: 200px">
@@ -79,11 +80,12 @@
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="h-100">
                     <h1 class="display-6 mb-5">
-                        Your Partner in Health Security
-                    </h1>
-                    <p class="fs-5 text-primary mb-4">
-                        TrustCare Insurance is here to help you find the best health security solutions. Your health is our priority.
-                    </p>
+                            @Model.Item3.FirstOrDefault()?.HeadingOne
+                        </h1>
+                        <p class="fs-5 text-primary mb-4">
+                            @Model.Item3.FirstOrDefault()?.Content
+
+                        </p>
                     <div class="row g-4 mb-4">
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center">
