@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<TrustCare.Models.Subscription>
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -208,7 +210,33 @@
             <script src="~/DashboardAssets/vendor/chart.js/Chart.min.js"></script>
 
             <!-- Page level custom scripts -->
-            <script src="~/DashboardAssets/js/demo/chart-area-demo.js"></script>
-            <script src="~/DashboardAssets/js/demo/chart-pie-demo.js"></script>
+          @*   <script>
+                var ctx = document.getElementById("myAreaChart").getContext("2d");
+                // var labels = @Html.Raw(Json.Serialize(ViewBag.Labels));
+                var data = @Html.Raw(Json.Serialize(ViewBag.benefit));
+                var chartData = {
+                    labels: ["jan", "ya'", 'dsadsa', 'dsads', "jan", "ya'", 'dsadsa', 'dsads', "jan", "ya'", 'dsadsa', 'dsads', "jan", "ya'", 'dsadsa', 'dsads']
+                    ,
+                    datasets: [
+                        {
+                            label: "Monthly Profit",
+                            data: data
+                            ,
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                };
+
+                var myLineChart = new Chart(ctx, {
+                    type: "line",
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            </script> *@
 </body>
 </html>

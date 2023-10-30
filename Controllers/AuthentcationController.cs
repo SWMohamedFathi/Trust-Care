@@ -11,6 +11,7 @@ using NuGet.Protocol.Plugins;
 using System.Security.Claims;
 using TrustCare.Models;
 
+
 namespace TrustCare.Controllers
 {
     public class AuthentcationController : Controller
@@ -50,13 +51,14 @@ namespace TrustCare.Controllers
                 if (user.ImageFile != null)
                 {
                     string wwwRootPath = webHostEnvironment.WebRootPath;
-
+                    // Create a unique file name for the uploaded image using a GUID
                     string fileName = Guid.NewGuid().ToString() + user.ImageFile.FileName;
 
                     string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
-
+                    // Get the path to your web application's root folder.
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
+                        // Update the user's profile image with the generated file name.
                         await user.ImageFile.CopyToAsync(fileStream);
                     }
 
@@ -68,6 +70,7 @@ namespace TrustCare.Controllers
                     ViewBag.RoleId = 2;
                     user.RoleId = 2;
                     _context.Add(user);
+                    // Update the user's profile image with the generated file name.
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "Home");
                 }
@@ -92,8 +95,9 @@ namespace TrustCare.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("UserId,RoleId,ProfileImage,UserName,Password,Email,FirstName,LastName,Phone,Dateofbirth,ImageFile")] User user)
         {
+         
 
-            var auth = _context.Users.Where(x => x.UserName == user.UserName || x.Email == user.Email && x.Password == user.Password).FirstOrDefault();
+            var auth = _context.Users.Where(x =>  x.Email == user.Email &&  x.Password == user.Password).FirstOrDefault();
 
             if (auth != null)
             {

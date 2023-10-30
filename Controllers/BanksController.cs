@@ -39,6 +39,8 @@ namespace TrustCare.Controllers
 
         }
 
+
+
         public string GeneratePDF(string SubName, DateTime SubDate, decimal Subamount)
         {
 
@@ -46,7 +48,7 @@ namespace TrustCare.Controllers
             string pdfFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pdf");
 
             // Create a new document with A4 size and margins
-            Document document = new Document(PageSize.A4, 200, 200, 200, 200);
+            Document document = new Document(PageSize.A5, 200, 200, 200, 200);
 
             try
             {
@@ -56,9 +58,13 @@ namespace TrustCare.Controllers
 
 
                 PdfContentByte cb = writer.DirectContent;
-                cb.SetLineWidth(2); // Set the border line width
-                cb.Rectangle(36, 36, PageSize.A4.Width - 72, PageSize.A4.Height - 72); // Adjust coordinates as needed
-                cb.Stroke();
+                //cb.SetLineWidth(2); // Set the border line width
+                //cb.Rectangle(36, 36, PageSize.A4.Width - 72, PageSize.A4.Height - 72); // Adjust coordinates as needed
+                //cb.Stroke();
+                iTextSharp.text.Image trustCareLogo = iTextSharp.text.Image.GetInstance("D:\\Downloads\\TrustCare2-master\\TrustCare2-master\\wwwroot\\HomeAssets\\img\\icon\\icon-01-primary.png");
+                trustCareLogo.ScaleToFit(100f, 100f);
+                trustCareLogo.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
+                document.Add(trustCareLogo);
                 // Add content to the PDF
                 document.Add(new Paragraph("TrustCare"));
                 document.Add(Chunk.NEWLINE);
@@ -167,18 +173,19 @@ namespace TrustCare.Controllers
 
             if (subscribed != null)
             {
+                // If the user is already subscribed, display a message 
 
-                ViewBag.notsubscribed = "notsubscribed";
+                ViewBag.notsubscribed = "Unfortunately, the subscription can only be paid for once";
 
-                return View("PaymentFailure");
+                return View(bank);
             }
             if (userInBank != null && userInBank.Balance >= 40)
             {
 
-
+                // If the user's bank information is found and the balance is sufficient
                 userInBank.Balance -= 40;
 
-
+                // Create a new subscription 
                 var subscription = new Subscription
                 {
                     UserId = userId, 
@@ -187,9 +194,10 @@ namespace TrustCare.Controllers
                     PaymentStatus = "Paid",
                     PaymentMethod = "Visa"
                 };
+                // Add the subscription to the database.
                 _context.Subscriptions.Add(subscription);
                 _context.SaveChanges();
-
+                // Create an email message.
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("dev.mohamedfathi@gmail.com"));
                 email.To.Add(MailboxAddress.Parse(HttpContext.Session.GetString("Email")));
@@ -220,24 +228,26 @@ namespace TrustCare.Controllers
 
                 email.Body = multipart;
 
-                // send email
+                // Send the email with the PDF attachment
                 using var smtp = new SmtpClient();
                 smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                 smtp.Authenticate("devmohamedfathi@gmail.com", "hzyj mzsn sstr sakn");
                 smtp.Send(email);
                 smtp.Disconnect(true);
-                
 
-       
-                return View("PaymentSuccess","Subscriptions");
+
+
+                var subscriptions = _context.Subscriptions.Where(s => s.UserId == userId).ToList();
+                return View("PaymentSuccess", subscriptions);
             }
             else
             {
-                
-                return View("PaymentFalier");
+                ViewBag.PaymentFalier = "Make sure your account information or that you have sufficient balance to subscribe";
+                return View(bank);
+
             }
 
- 
+
         }
      
         // GET: Banks/Edit/5
@@ -336,4 +346,6 @@ namespace TrustCare.Controllers
 
 
     }
+
+
 }

@@ -304,75 +304,185 @@ namespace TrustCare.Controllers
 
         }
 
+        //public IActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
+        //{
+
+
+        //    //getting the apiContext  
+        //    var ClientID = _configuration.GetValue<string>("PayPal:Key");
+        //    var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
+        //    var mode = _configuration.GetValue<string>("PayPal:mode");
+        //    APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID, ClientSecret, mode);
+        //    // apiContext.AccessToken="Bearer access_token$production$j27yms5fthzx9vzm$c123e8e154c510d70ad20e396dd28287";
+        //    try
+        //    {
+        //        //A resource representing a Payer that funds a payment Payment Method as paypal  
+        //        //Payer Id will be returned when payment proceeds or click to pay  
+        //        string payerId = PayerID;
+        //        if (string.IsNullOrEmpty(payerId))
+        //        {
+        //            var userId = HttpContext.Session.GetInt32("UserId");
+
+        //            // Create a new subscription 
+        //            var subscription = new Subscription
+        //            {
+        //                UserId = userId,
+        //                SubscriptionDate = DateTime.Now,
+        //                SubscriptionAmount = 40,
+        //                PaymentStatus = "Paid",
+        //                PaymentMethod = "Visa"
+        //            };
+        //            // Add the subscription to the database.
+        //            _context.Subscriptions.Add(subscription);
+        //            _context.SaveChanges();
+        //            //this section will be executed first because PayerID doesn't exist  
+        //            //it is returned by the create function call of the payment class  
+        //            // Creating a payment  
+        //            // baseURL is the url on which paypal sendsback the data.  
+        //            string baseURI = this.Request.Scheme + "://" + this.Request.Host + "/Home/PaymentWithPayPal?";
+        //            //here we are generating guid for storing the paymentID received in session  
+        //            //which will be used in the payment execution  
+        //            var guidd = Convert.ToString((new Random()).Next(100000));
+        //            guid = guidd;
+        //            //CreatePayment function gives us the payment approval url  
+        //            //on which payer is redirected for paypal account payment  
+        //            var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
+        //            //get links returned from paypal in response to Create function call  
+        //            var links = createdPayment.links.GetEnumerator();
+        //            string paypalRedirectUrl = null;
+        //            while (links.MoveNext())
+        //            {
+        //                Links lnk = links.Current;
+        //                if (lnk.rel.ToLower().Trim().Equals("approval_url"))
+        //                {
+        //                    //saving the payapalredirect URL to which user will be redirected for payment  
+        //                    paypalRedirectUrl = lnk.href;
+        //                }
+        //            }
+        //            // saving the paymentID in the key guid  
+        //            httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
+        //            return Redirect(paypalRedirectUrl);
+        //        }
+        //        else
+        //        {
+        //            // This function exectues after receving all parameters for the payment  
+
+        //            var paymentId = httpContextAccessor.HttpContext.Session.GetString("payment");
+        //            var executedPayment = ExecutePayment(apiContext, payerId, paymentId as string);
+        //            //If executed payment failed then we will show payment failure message to user  
+        //            if (executedPayment.state.ToLower() != "approved")
+        //            {
+
+        //                return View("PaymentFailed");
+        //            }
+        //            var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
+
+
+        //            return View("PaymentSuccess");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return View("PaymentFailed");
+        //    }
+
+
+        //}
         public IActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
-            
-
-            //getting the apiContext  
+            // Get the PayPal API credentials from app settings
             var ClientID = _configuration.GetValue<string>("PayPal:Key");
             var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
             var mode = _configuration.GetValue<string>("PayPal:mode");
+
+            // Initialize the PayPal API context
             APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID, ClientSecret, mode);
-            // apiContext.AccessToken="Bearer access_token$production$j27yms5fthzx9vzm$c123e8e154c510d70ad20e396dd28287";
+
             try
             {
-                //A resource representing a Payer that funds a payment Payment Method as paypal  
-                //Payer Id will be returned when payment proceeds or click to pay  
+                // Check if a PayerID exists, indicating a return from PayPal
                 string payerId = PayerID;
                 if (string.IsNullOrEmpty(payerId))
                 {
-                    //this section will be executed first because PayerID doesn't exist  
-                    //it is returned by the create function call of the payment class  
-                    // Creating a payment  
-                    // baseURL is the url on which paypal sendsback the data.  
-                    string baseURI = this.Request.Scheme + "://" + this.Request.Host + "/Home/PaymentWithPayPal?";
-                    //here we are generating guid for storing the paymentID received in session  
-                    //which will be used in the payment execution  
-                    var guidd = Convert.ToString((new Random()).Next(100000));
-                    guid = guidd;
-                    //CreatePayment function gives us the payment approval url  
-                    //on which payer is redirected for paypal account payment  
-                    var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
-                    //get links returned from paypal in response to Create function call  
-                    var links = createdPayment.links.GetEnumerator();
-                    string paypalRedirectUrl = null;
-                    while (links.MoveNext())
+                    // User is initiating the payment
+
+                    // Retrieve the user ID (you should have a valid session management mechanism)
+                    var userId = HttpContext.Session.GetInt32("UserId");
+
+                    // Create a new subscription
+                    var subscription = new Subscription
                     {
-                        Links lnk = links.Current;
-                        if (lnk.rel.ToLower().Trim().Equals("approval_url"))
-                        {
-                            //saving the payapalredirect URL to which user will be redirected for payment  
-                            paypalRedirectUrl = lnk.href;
-                        }
+                        UserId = userId,
+                        SubscriptionDate = DateTime.Now,
+                        SubscriptionAmount = 40, // Set the appropriate subscription amount
+                        PaymentStatus = "Pending", // Initial status, it should be updated after payment
+                        PaymentMethod = "PayPal" // Set the correct payment method
+                    };
+
+                    // Add the subscription to the database
+                    _context.Subscriptions.Add(subscription);
+                    _context.SaveChanges();
+
+                    // Build the PayPal payment request
+                    string baseURI = this.Request.Scheme + "://" + this.Request.Host + "/Home/PaymentWithPayPal?";
+                    guid = Guid.NewGuid().ToString(); // Use a GUID
+                    var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
+
+                    // Extract the PayPal approval URL
+                    var approvalUrl = createdPayment.links
+                        .FirstOrDefault(link => link.rel.ToLower() == "approval_url")?.href;
+
+                    if (approvalUrl != null)
+                    {
+                        // Save the payment ID in the session
+                        httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
+
+                        // Redirect the user to PayPal for payment
+                        return Redirect(approvalUrl);
                     }
-                    // saving the paymentID in the key guid  
-                    httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
-                    return Redirect(paypalRedirectUrl);
+                    else
+                    {
+                        // Handle the case where no approval URL is available
+                        return View("PaymentFailed");
+                    }
                 }
                 else
                 {
-                    // This function exectues after receving all parameters for the payment  
+                    // User is returning from PayPal after payment
 
+                    // Get the payment ID from the session
                     var paymentId = httpContextAccessor.HttpContext.Session.GetString("payment");
+
+                    // Execute the PayPal payment
                     var executedPayment = ExecutePayment(apiContext, payerId, paymentId as string);
-                    //If executed payment failed then we will show payment failure message to user  
+
                     if (executedPayment.state.ToLower() != "approved")
                     {
-
+                        // Payment was not approved, handle accordingly
                         return View("PaymentFailed");
                     }
-                    var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
 
+                    // Extract information from the PayPal response, e.g., blogId
+
+                    // Update the payment status in your subscription
+                    var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == s.UserId && s.PaymentStatus == "Pending");
+                    if (subscription != null)
+                    {
+                        subscription.PaymentStatus = "Paid";
+                        // Update any other relevant data based on PayPal response
+                        // For example, set subscription.BlogId = blogId;
+                        _context.SaveChanges();
+                    }
 
                     return View("PaymentSuccess");
                 }
             }
             catch (Exception ex)
             {
+                // Log the exception and handle the error gracefully
+                // ...
                 return View("PaymentFailed");
             }
-     
-
         }
 
 

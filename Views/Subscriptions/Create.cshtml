@@ -14,7 +14,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label">@ViewBag.FirstName @ViewBag.LastName</label>
+                <input type="hidden" asp-for="SubscriptionId" value=@ViewBag.SubscriptionId />
+
             </div>
             <div class="form-group">
                 <label>Date:@ViewBag.CurrentTime </label>

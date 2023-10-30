@@ -38,8 +38,37 @@ namespace TrustCare.Controllers
 
 
 
+            int currentYear = DateTime.Now.Year;
+            var model = _context.Subscriptions
+                .Where(x => x.SubscriptionDate.HasValue && x.SubscriptionDate.Value.Year == currentYear)
+                .ToList();
 
+            // Create a collection of all months in the current year
+            var allMonths = Enumerable.Range(1, 12);
+
+            // Group the data by month and calculate the profit for each month
+            var monthlyProfits = allMonths
+                .GroupJoin(
+                    model,
+                    month => month,
+                    subscription => subscription.SubscriptionDate.Value.Month,
+                    (month, subscriptions) => new
+                    {
+                        Month = month,
+                        TotalProfit = subscriptions.Sum(subscription => subscription.SubscriptionAmount)
+                    })
+                .OrderBy(result => result.Month)
+                .Select(result => result.TotalProfit)
+                .ToList();
+            var labels = Enumerable.Range(1, 12).Select(month => CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month)).ToList();
+
+
+            //ViewBag.Labels = labels;
+            ViewBag.MonthlyProfits = monthlyProfits;
+            ViewBag.Labels = labels;
             return View();
+
+
         }
         public IActionResult Report()
         {
@@ -64,6 +93,7 @@ namespace TrustCare.Controllers
         public IActionResult Report(int? month, int? year)
         {
             int currentMonth = DateTime.Now.Month;
+            // Retrieve a list of subscriptions from the database, including related data.
             var model = _context.Subscriptions
                 .Include(c => c.Beneficiaries)
                 .Include(c => c.User)
@@ -71,6 +101,7 @@ namespace TrustCare.Controllers
 
             if (month == 0 && year != null)
             {
+                // Filter the subscriptions by the specified year.
                 var subscriptionsFilteredByYear = model.Where(x => x.SubscriptionDate.Value.Year == year);
                 ViewBag.benefit = subscriptionsFilteredByYear.Sum(x => x.SubscriptionAmount);
                 ViewBag.RegisteredUsers = subscriptionsFilteredByYear.Count();
@@ -86,6 +117,7 @@ namespace TrustCare.Controllers
                 return View(subscriptionsFilteredByMonthAndYear);
             }
 
+       
             return View(model);
 
 
@@ -93,5 +125,41 @@ namespace TrustCare.Controllers
 
 
         }
+
+        //public IActionResult Chart()
+        //{
+
+        //    //Get the current year and fetch data for the current year
+
+
+        //}
+
+        //[HttpPost]
+        //public IActionResult Chart(int? month, int? year)
+        //{
+
+        //    // Get the current year and fetch data for the current year
+        //    int currentYear = DateTime.Now.Year;
+        //    var model = _context.Subscriptions
+        //        .Where(x => x.SubscriptionDate.Value.Year == currentYear)
+        //        .Include(c => c.Beneficiaries)
+        //        .Include(c => c.User)
+        //        .ToList();
+
+        //    // Group the data by month and calculate the profit for each month
+        //    var monthlyProfits = model
+        //        .GroupBy(x => x.SubscriptionDate.Value.Month)
+        //        .Select(g => g.Sum(x => x.SubscriptionAmount))
+        //        .ToList();
+
+        //    // Define labels for the months
+        //    //var labels = Enumerable.Range(1, 12).Select(month => CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month)).ToList();
+
+        //    //ViewBag.Labels = labels;
+        //    ViewBag.MonthlyProfits = monthlyProfits;
+
+        //    return View();
+        //}
+
     }
 }
